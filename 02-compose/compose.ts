@@ -1,4 +1,4 @@
-type Increment = (x: number) => number;
+export type Increment = (x: number) => number;
 
 const increment: Increment = x => x + 1;
 
@@ -14,7 +14,7 @@ console.log(incrementThenString(7)); // "8"
 // Define compose function
 type Compose = <A, B, C>(f: (x: B) => C, g: (x: A) => B) => (x: A) => C;
 
-const composeTs: Compose = (f, g) => x => f(g(x));
+export const composeTs: Compose = (f, g) => x => f(g(x));
 const incrementThenStringWithCompose: IncrementThenString = composeTs(
   toStringTs,
   increment
