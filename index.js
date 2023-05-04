@@ -1,1 +1,2 @@
-console.log('hi');
+const R = require('ramda');
+console.log(R);
