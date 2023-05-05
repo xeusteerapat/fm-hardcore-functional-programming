@@ -107,9 +107,12 @@ const tryCatch = fn => {
   }
 };
 
+const readFile = path => tryCatch(() => fs.readFileSync(path));
+const parseJSON = strContent => tryCatch(() => JSON.parse(strContent));
+
 const getPort = () =>
-  tryCatch(() => fs.readFileSync(__dirname + '/config.json'))
-    .map(content => JSON.parse(content))
+  readFile(__dirname + '/config.json')
+    .chain(content => parseJSON(content))
     .map(config => config.port)
     .fold(
       () => 8080, // if something went wrong, then use 8080
@@ -118,3 +121,5 @@ const getPort = () =>
 
 const resultGetPort = getPort();
 console.log(resultGetPort); // 3000
+
+// Flattening Either Monads with Chain
