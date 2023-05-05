@@ -1,4 +1,4 @@
-import { composeTs, Increment } from '../02-compose/compose';
+import { composeTs, Increment } from '../02-compose/compose.ts';
 
 type DivideTwo = (x: number) => number;
 const divideTwo: DivideTwo = x => 2 / x;
