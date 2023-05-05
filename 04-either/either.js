@@ -14,7 +14,7 @@ const Right = x => ({
 });
 
 // FromNullable helper
-const fromNullable = x => (x != null ? Right(x) : Left());
+const fromNullable = x => (x != null ? Right(x) : Left(null));
 
 const findColor = name => {
   const found = {
@@ -110,6 +110,7 @@ const tryCatch = fn => {
 const readFile = path => tryCatch(() => fs.readFileSync(path));
 const parseJSON = strContent => tryCatch(() => JSON.parse(strContent));
 
+// Flattening Either Monads with Chain
 const getPort = () =>
   readFile(__dirname + '/config.json')
     .chain(content => parseJSON(content))
@@ -122,4 +123,97 @@ const getPort = () =>
 const resultGetPort = getPort();
 console.log(resultGetPort); // 3000
 
-// Flattening Either Monads with Chain
+// Excercise
+const getStreet = user =>
+  fromNullable(user.address)
+    .map(address => address.street)
+    .fold(
+      () => 'No street',
+      street => street
+    );
+
+const xeus = { address: { street: { name: 'Ratchada' } } };
+const dunno = {};
+console.log(getStreet(xeus)); // { name: 'Ratchada' }
+console.log(getStreet(dunno)); // 'No street',
+
+const getStreetName = user =>
+  fromNullable(user)
+    .chain(user => fromNullable(user.address))
+    .chain(address => fromNullable(address.street))
+    .map(street => street.name)
+    .fold(
+      () => 'No street name',
+      name => name
+    );
+
+console.log(getStreetName(xeus)); // Ratchada
+console.log(getStreetName({ address: { street: null } })); // No street name
+
+// next one
+const DB_REGEX = /postgres:\/\/([^:]+):([^@]+)@.*?\/(.+)$/i;
+
+const parseDbUrl_ = cfg => {
+  try {
+    const c = JSON.parse(cfg); // throws if it can't parse
+    return c.url.match(DB_REGEX);
+  } catch (e) {
+    return null;
+  }
+};
+
+const parseDbUrl = config =>
+  tryCatch(() => JSON.parse(config))
+    .map(content => content.url.match(DB_REGEX))
+    .fold(
+      () => 'Incorrect url',
+      result => result
+    );
+
+const parseDbUrlWithChain = config =>
+  Right(config)
+    .chain(c => tryCatch(() => JSON.parse(c)))
+    .map(content => content.url.match(DB_REGEX))
+    .fold(
+      () => null,
+      result => result
+    );
+
+/**REVIEW - 
+ * [
+  'postgres://sally:muppets@localhost:5432/mydb',
+  'sally',
+  'muppets',
+  'mydb',
+  index: 0,
+  input: 'postgres://sally:muppets@localhost:5432/mydb',
+  groups: undefined
+]
+
+otherwise return null
+ */
+console.log(
+  parseDbUrl('{"url": "postgres://sally:muppets@localhost:5432/mydb"}')
+);
+console.log(
+  parseDbUrlWithChain('{"url": "postgres://sally:muppets@localhost:5432/mydb"}')
+);
+console.log(
+  parseDbUrl('{"url": "postgres:/sally:muppets@localhost:5432/mydb"}')
+);
+console.log(
+  parseDbUrlWithChain('{"url": "postgres://sallymuppets@localhost:5432/mydb"}')
+);
+
+const startApp = config =>
+  fromNullable(parseDbUrl(config))
+    .map(([_, user, password, db]) => `starting ${db}, ${user}, ${password}`)
+    .fold(
+      () => `Incorrect configuration provided!`,
+      result => result
+    );
+
+console.log(
+  startApp('{"url": "postgres://sally:muppets@localhost:5432/mydb"}')
+); // starting mydb, sally, muppets
+console.log(startApp('{"url": "postgres//sally:muppets@localhost:5432/mydb"}')); // Incorrect configuration provided!
