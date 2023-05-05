@@ -84,3 +84,37 @@ console.log(
       color => color
     )
 ); // Not found
+
+const fs = require('fs');
+
+// Traditional approach
+const getPort_ = () => {
+  try {
+    const str = fs.readFileSync('config.json');
+    const config = JSON.parse(str);
+
+    return config.port;
+  } catch (e) {
+    return 3000;
+  }
+};
+
+const tryCatch = fn => {
+  try {
+    return Right(fn());
+  } catch (error) {
+    return Left(error);
+  }
+};
+
+const getPort = () =>
+  tryCatch(() => fs.readFileSync(__dirname + '/config.json'))
+    .map(content => JSON.parse(content))
+    .map(config => config.port)
+    .fold(
+      () => 8080, // if something went wrong, then use 8080
+      port => port
+    );
+
+const resultGetPort = getPort();
+console.log(resultGetPort); // 3000
