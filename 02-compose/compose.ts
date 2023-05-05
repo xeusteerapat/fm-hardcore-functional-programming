@@ -12,10 +12,20 @@ const incrementThenString: IncrementThenString = x => toStringTs(increment(x));
 console.log(incrementThenString(7)); // "8"
 
 // Define compose function
-type Compose = <A, B, C>(f: (x: B) => C, g: (x: A) => B) => (x: A) => C;
+// type Compose = <A, B, C>(f: (x: B) => C, g: (x: A) => B) => (x: A) => C;
 
-export const composeTs: Compose = (f, g) => x => f(g(x));
-const incrementThenStringWithCompose: IncrementThenString = composeTs(
+// export const composeTs: Compose = (f, g) => x => f(g(x));
+type Func<T, R> = (arg: T) => R;
+
+function composeTs<T, R>(...funcs: Array<Func<any, any>>): Func<T, R> {
+  return (arg: T) =>
+    funcs.reduceRight(
+      (acc: R, currFunc: Func<any, any>) => currFunc(acc),
+      arg as unknown as R
+    );
+}
+
+const incrementThenStringWithCompose = composeTs<number, number>(
   toStringTs,
   increment
 );
