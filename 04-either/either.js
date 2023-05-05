@@ -13,6 +13,9 @@ const Right = x => ({
   toString: `Right(${x})`,
 });
 
+// FromNullable helper
+const fromNullable = x => (x != null ? Right(x) : Left());
+
 const findColor = name => {
   const found = {
     red: '#ff4444',
@@ -20,14 +23,14 @@ const findColor = name => {
     blue: '#3b5998',
   }[name];
 
-  return found ? Right(found) : Left('Not found color 🙅🏻‍♂️');
+  return found ? Right(found) : Left('Not found color! ❌');
 };
 
 console.log(
   findColor('red')
     .map(x => x.toUpperCase())
     .fold(
-      () => 'Not Found',
+      () => 'Not found color! ❌',
       color => color
     )
 ); // 'Right(#FF4444)'
@@ -35,7 +38,7 @@ console.log(
   findColor('green')
     .map(x => x.toUpperCase())
     .fold(
-      () => 'Not Found',
+      () => 'Not found color! ❌',
       color => color
     )
 ); // 'Right(#00FF00)'
@@ -43,7 +46,7 @@ console.log(
   findColor('blue')
     .map(x => x.toUpperCase())
     .fold(
-      () => 'Not Found',
+      () => 'Not found color! ❌',
       color => color
     )
 ); // 'Right(#3B5998)'
@@ -51,7 +54,33 @@ console.log(
   findColor('redd')
     .map(x => x.toUpperCase())
     .fold(
-      () => 'Not Found',
+      () => 'Not found color! 🙅🏻‍♂️',
       color => color
     )
 ); // 'Left(Not found color)'
+
+// with fromNullable helper
+const findColor_ = name =>
+  fromNullable(
+    {
+      red: '#ff4444',
+      green: '#00ff00',
+      blue: '#3b5998',
+    }[name]
+  );
+console.log(
+  findColor_('red')
+    .map(x => x.toUpperCase())
+    .fold(
+      () => 'Not found color! ❌',
+      color => color
+    )
+); // #FF4444
+console.log(
+  findColor_('sdfsdfedg')
+    .map(x => x.toUpperCase())
+    .fold(
+      () => 'Not found color! ❌',
+      color => color
+    )
+); // Not found
