@@ -28,6 +28,30 @@ function accum(s) {
   return result;
 }
 
+function accumWithCompose(s) {
+  const compose =
+    (...fns) =>
+    x =>
+      fns.reduceRight((acc, fn) => {
+        return fn(acc);
+      }, x);
+
+  const composed = compose(
+    arr => arr.join('-'),
+    arr => arr.map(item => item.replace(item[0], item[0].toUpperCase())),
+    arr => arr.map(item => item.char.repeat(item.order)),
+    arr => arr.map((item, idx) => ({ char: item, order: idx + 1 })),
+    str => str.split(''),
+    str => str.toLowerCase()
+  );
+
+  return composed(s);
+}
+
 console.log(accum('abcd'));
 console.log(accum('RqaEzty'));
 console.log(accum('cwAt'));
+
+console.log(accumWithCompose('abcd'));
+console.log(accumWithCompose('RqaEzty'));
+console.log(accumWithCompose('cwAt'));
