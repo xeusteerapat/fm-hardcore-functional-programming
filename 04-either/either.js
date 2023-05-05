@@ -217,3 +217,19 @@ console.log(
   startApp('{"url": "postgres://sally:muppets@localhost:5432/mydb"}')
 ); // starting mydb, sally, muppets
 console.log(startApp('{"url": "postgres//sally:muppets@localhost:5432/mydb"}')); // Incorrect configuration provided!
+
+// Tracing with log
+const logIt = x => {
+  console.log(x);
+  return x;
+};
+
+const parseDbUrlWithLog = config =>
+  logIt(tryCatch(() => JSON.parse(config)))
+    .map(content => content.url.match(DB_REGEX))
+    .fold(
+      () => 'Incorrect url',
+      result => result
+    );
+
+parseDbUrlWithLog('{"url": "postgres://sally:muppets@localhost:5432/mydb"}');
