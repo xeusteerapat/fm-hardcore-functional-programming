@@ -1,5 +1,7 @@
 # Learn Functional Programming
 
+From course: [Hardcore Functional Programming in JavaScript, v2](https://frontendmasters.com/courses/hardcore-js-v2)
+
 - For `JS` run with `Node.js`
 
 ```shell
