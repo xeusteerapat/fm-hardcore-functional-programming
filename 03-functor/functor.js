@@ -1,17 +1,23 @@
-// Functor is a container that holds an object that is mapped over,
+/**
+  Functor (or a Box in code) is a container that holds an object that is mapped over,
+  Functor alone doesn't do much. It basically captures something in a context.
+  We can keep mapping, and folding, and composing in different ways around it.
+  As we'll see, there are stronger things than Box.
+  They will give us behaviors associated with composition and new ways to compose.
+  This is good practice to work on something as simple as a structure as Box that has no added behaviors,
+  and we can practice composing with it.
+*/
 const Box = x => ({
   map: fn => Box(fn(x)),
   fold: fn => fn(x),
 });
 
-/*
-const nextCharForNumberString = str => {
+const nextCharForNumberString_ = str => {
   const trimmed = str.trim();
   const number = parseInt(trimmed);
   const nextNumber = number + 1;
   return String.fromCharCode(nextNumber);
 };
-*/
 
 const nextCharForNumberString = str => {
   return Box(str)

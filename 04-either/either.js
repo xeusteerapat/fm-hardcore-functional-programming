@@ -1,11 +1,12 @@
-// Left and Right are the sub-class of the Either type
-const Left = x => ({
-  chain: fn => Left(x),
-  map: fn => Left(x),
-  fold: (f, g) => f(x),
-  toString: `Left(${x})`,
-});
-
+/**
+  Left and Right are the sub-class of the Either type
+  Either is defined as a Right or a Left. These are two sub-types, or sub-classes if you will, of Either, 
+  and Either doesn't actually come into play. It will just refer to one of these two types.
+  Let's head up and define chain. chain is just like map, except we're not going to box it back up just like we wanted. 
+  That way we'll end up with one Right or Left after the end of this. 
+  Then similarly with our Left side, we want Left to act like a Left. Left just ignores everything. 
+  That's all we need to do is return itself back.
+ */
 const Right = x => ({
   chain: fn => fn(x),
   map: fn => Right(fn(x)),
@@ -13,7 +14,27 @@ const Right = x => ({
   toString: `Right(${x})`,
 });
 
-// FromNullable helper
+/**
+  "Isn't chaining and folding the same thing sometimes?"
+  Right. chain is defined just like box's fold was. The idea is that here, 
+  fold is going to capture the idea of removing a value from its context -- taking it out of the box, 
+  whether it's a Right or a Left or a box itself.
+  chain expects you to run a function and return another one. 
+  We'll keep that convention and intuition as we go along. 
+  They are two very functions even though they might have the same definitions sometimes.
+*/
+const Left = x => ({
+  chain: fn => Left(x),
+  map: fn => Left(x),
+  fold: (f, g) => f(x),
+  toString: `Left(${x})`,
+});
+
+/**
+  FromNullable helper
+  Now, we can say fromNullable, and we'll take some x here and say if it is != null, 
+  this captures the undefined case as well. We'll return a Right(x). Otherwise, we'll return a Left(null).
+ */
 const fromNullable = x => (x != null ? Right(x) : Left(null));
 
 const findColor = name => {
