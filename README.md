@@ -11,3 +11,7 @@ node --watch file.js
 ```shell
 deno run --watch file.ts
 ```
+
+> Functional Programming is a way to ***think and design*** your solution (code) to a problem (program)
+
+From a great youtube [series](https://www.youtube.com/watch?v=Z3PLwD3iebg&list=PLuPevXgCPUIMbCxBEnc1dNwboH6e2ImQo) about functional programming
