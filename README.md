@@ -20,5 +20,3 @@ node --watch file.js
 ```shell
 deno run --watch file.ts
 ```
-
-
