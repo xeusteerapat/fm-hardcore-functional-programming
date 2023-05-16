@@ -42,3 +42,17 @@ console.log(res5);
 const split = curry((delimeter, str) => str.split(delimeter));
 const batmanSplitted = split(' ', 'Jingle bells Batman smells');
 console.log(batmanSplitted);
+
+// Array reduce implementation
+const reduce = function (reducerFn, initialVal, arr) {
+  let accom = initialVal;
+
+  for (let i = 0, { length } = arr; i < length; i++) {
+    accom = reducerFn(accom, arr[i]);
+  }
+
+  return accom;
+};
+
+const nums = [1, 2, 3];
+console.log(reduce((acc, curr) => acc + curr, 0, nums)); // 6
