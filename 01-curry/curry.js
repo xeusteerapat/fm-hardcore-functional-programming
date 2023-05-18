@@ -44,22 +44,29 @@ const batmanSplitted = split(' ', 'Jingle bells Batman smells');
 console.log(batmanSplitted);
 
 // Array reduce implementation
-const reduce = function (reducerFn, initialVal, arr) {
-  let accom = initialVal;
+const reduce = (reducerFn, initialVal, arr) => {
+  let accumulator = initialVal;
 
-  for (let i = 0; i < this.length; i++) {
-    accom = reducerFn(accom, this[i]);
+  for (let i = 0; i < arr.length; i++) {
+    if (accumulator === undefined) {
+      accumulator = arr[i];
+    } else {
+      accumulator = reducerFn(accumulator, arr[i], i, arr);
+    }
   }
 
-  return accom;
+  return accumulator;
 };
 
-// const nums = [1, 2, 3];
-// console.log(reduce((acc, curr) => acc + curr, 0, nums)); // 6
+Array.prototype.xReduce = reduce;
+
+const nums = [1, 2, 3];
+
+console.log(reduce((acc, curr) => acc + curr, 0, nums)); // 6
 
 // Implement filer with Reduce
 const filterWithReduce = (fn, arr) =>
   reduce((acc, curr) => (fn(curr) ? acc.concat([curr]) : acc), [], arr);
 
-const even = filterWithReduce([1, 2, 3, 4]);
+const even = filterWithReduce(x => x % 2 === 0, [1, 2, 3, 4]);
 console.log('filterWithReduce:', even);
