@@ -47,12 +47,19 @@ console.log(batmanSplitted);
 const reduce = function (reducerFn, initialVal, arr) {
   let accom = initialVal;
 
-  for (let i = 0, { length } = arr; i < length; i++) {
-    accom = reducerFn(accom, arr[i]);
+  for (let i = 0; i < this.length; i++) {
+    accom = reducerFn(accom, this[i]);
   }
 
   return accom;
 };
 
-const nums = [1, 2, 3];
-console.log(reduce((acc, curr) => acc + curr, 0, nums)); // 6
+// const nums = [1, 2, 3];
+// console.log(reduce((acc, curr) => acc + curr, 0, nums)); // 6
+
+// Implement filer with Reduce
+const filterWithReduce = (fn, arr) =>
+  reduce((acc, curr) => (fn(curr) ? acc.concat([curr]) : acc), [], arr);
+
+const even = filterWithReduce([1, 2, 3, 4]);
+console.log('filterWithReduce:', even);
